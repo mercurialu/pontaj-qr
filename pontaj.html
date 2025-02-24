@@ -15,19 +15,12 @@ window.onload=()=>{
   if(angajat && tip){
     navigator.geolocation.getCurrentPosition(pos=>{
       fetch('https://api.ipify.org?format=json').then(r=>r.json()).then(ipData=>{
-        const data={
-          angajat: angajat,
-          tip: tip,
-          timestamp: new Date().toISOString(),
-          locatie: pos.coords.latitude+","+pos.coords.longitude,
-          ip: ipData.ip
-        };
+        const locatie=pos.coords.latitude+","+pos.coords.longitude;
+        const ip=ipData.ip;
 
-        fetch('https://script.google.com/macros/s/AKfycbxoB8JXg4vF01BriOx4uB_dKvbpDVTS1z9qOuh3genLGSYaF8tfH42dNHsOlllKbuyHKg/exec',{ 
-          method:'POST',
-          headers:{'Content-Type':'application/json'},
-          body:JSON.stringify(data)
-        })
+        const url=`https://script.google.com/macros/s/AKfycbw4yjy2vfJnG0vjw5ski0r2w-61fD7jimVKKG3cXnUV6xshwCIYnhXmKsiZDpyjaRrAjg/exec?angajat=${encodeURIComponent(angajat)}&tip=${encodeURIComponent(tip)}&ip=${ip}&locatie=${locatie}`;
+
+        fetch(url)
         .then(()=>document.getElementById('status').innerText="✅ Pontaj înregistrat!")
         .catch(()=>document.getElementById('status').innerText="❌ Eroare pontaj!");
       });
