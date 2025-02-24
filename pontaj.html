@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<title>Pontaj QR Automat</title>
+</head>
+<body>
+<h3 id="status">Pontaj în curs...</h3>
+
+<script>
+window.onload=()=>{
+  const params=new URLSearchParams(window.location.search);
+  const angajat=params.get('angajat');
+  const tip=params.get('tip');
+
+  if(angajat && tip){
+    navigator.geolocation.getCurrentPosition(pos=>{
+      fetch('https://api.ipify.org?format=json').then(r=>r.json()).then(ipData=>{
+        const data={
+          angajat: angajat,
+          tip: tip,
+          timestamp: new Date().toISOString(),
+          locatie: pos.coords.latitude+","+pos.coords.longitude,
+          ip: ipData.ip
+        };
+
+        fetch('https://script.google.com/macros/s/AKfycby6tnMjeV0T1Q9WbW_vC7td79ad6H3qfnPv80dMi6KiS6l1ckYv6uicW6NeGFbtViYHGw/exec',{ 
+          method:'POST',
+          headers:{'Content-Type':'application/json'},
+          body:JSON.stringify(data)
+        })
+        .then(()=>document.getElementById('status').innerText="✅ Pontaj înregistrat!")
+        .catch(()=>document.getElementById('status').innerText="❌ Eroare pontaj!");
+      });
+    },()=>alert("Activează GPS-ul!"));
+  }else{
+    document.getElementById('status').innerText="⚠️ QR invalid!";
+  }
+};
+</script>
+</body>
+</html>
