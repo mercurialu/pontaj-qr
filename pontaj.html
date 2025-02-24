@@ -17,23 +17,27 @@ window.onload=()=>{
     navigator.geolocation.getCurrentPosition(
       (pos) => {
         const locatie = pos.coords.latitude.toFixed(7) + "," + pos.coords.longitude.toFixed(7); // Locație precisă
-        const ip = "";
+        const ip = "";  // Vom folosi IP-ul din altă sursă
 
-        const url = `https://script.google.com/macros/s/AKfycbw4yjy2vfJnG0vjw5ski0r2w-61fD7jimVKKG3cXnUV6xshwCIYnhXmKsiZDpyjaRrAjg/exec?angajat=${encodeURIComponent(angajat)}&tip=${encodeURIComponent(tip)}&ip=${ip}&locatie=${locatie}`;
+        // Verificăm dacă IP-ul există deja
+        fetch('https://api.ipify.org?format=json').then(response => response.json()).then(ipData => {
+          const ip = ipData.ip || "0.0.0.0";  // Fallback în caz că IP-ul nu se poate obține
 
-        fetch(url)
-          .then(() => document.getElementById('status').innerText = "✅ Pontaj înregistrat!")
-          .catch(() => document.getElementById('status').innerText = "❌ Eroare pontaj!");
+          const url = `https://script.google.com/macros/s/AKfycbw4yjy2vfJnG0vjw5ski0r2w-61fD7jimVKKG3cXnUV6xshwCIYnhXmKsiZDpyjaRrAjg/exec?angajat=${encodeURIComponent(angajat)}&tip=${encodeURIComponent(tip)}&ip=${ip}&locatie=${locatie}`;
+
+          fetch(url)
+            .then(() => document.getElementById('status').innerText = "✅ Pontaj înregistrat!")
+            .catch(() => document.getElementById('status').innerText = "❌ Eroare pontaj!");
+        });
       },
       () => {
-        // Fallback la locația prin IP
+        // Fallback în cazul în care nu putem obține locația GPS
         document.getElementById('status').innerText = "❌ GPS indisponibil, folosim locația prin IP!";
         
         fetch('https://api.ipify.org?format=json').then(response => response.json()).then(ipData => {
           const ip = ipData.ip;
           
-          fetch(`https://ipinfo.io/${ip}/json?token=30adda3f305374`)  // Înlocuiește cu cheia ta API
-
+          fetch(`https://ipinfo.io/${ip}/json?token=30adda3f305374`)  // Folosim locația prin IP
             .then(response => response.json())
             .then(data => {
               const locatieIP = data.loc || "0.0,0.0";  // Dacă locația IP nu este disponibilă, folosim 0.0,0.0
