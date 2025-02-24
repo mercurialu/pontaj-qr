@@ -39,7 +39,7 @@ window.onload = () => {
         fetch('https://api.ipify.org?format=json').then(response => response.json()).then(ipData => {
           const ip = ipData.ip || "0.0.0.0";  // Fallback în caz că IP-ul nu se poate obține
 
-          const url = `https://script.google.com/macros/s/AKfycbyPrWVbTf63RF73akkj2foiBQLfJjS0qlaZbo2BqesyyH-8YCfG4Mzd_ofZp6FUOtaAAg/exec?angajat=${encodeURIComponent(angajat)}&tip=${encodeURIComponent(tip)}&ip=${ip}&locatie=${locatie}`;
+          const url = `https://script.google.com/macros/s/AKfycbwNTrzILaCjUqBQ5SSghq9cDEM2LCbNXLiGQFYlcpmC_wHmrtcDHidwoVpm4-fClE6Gaw/exec?angajat=${encodeURIComponent(angajat)}&tip=${encodeURIComponent(tip)}&ip=${ip}&locatie=${locatie}`;
 
           fetch(url)
             .then(response => response.json())
@@ -70,7 +70,7 @@ window.onload = () => {
             .then(response => response.json())
             .then(data => {
               const locatieIP = data.loc || "0.0,0.0";  // Dacă locația IP nu este disponibilă, folosim 0.0,0.0
-              const urlFallback = `https://script.google.com/macros/s/AKfycbyPrWVbTf63RF73akkj2foiBQLfJjS0qlaZbo2BqesyyH-8YCfG4Mzd_ofZp6FUOtaAAg/exec?angajat=${encodeURIComponent(angajat)}&tip=${encodeURIComponent(tip)}&ip=${ip}&locatie=${locatieIP}`;
+              const urlFallback = `https://script.google.com/macros/s/AKfycbwNTrzILaCjUqBQ5SSghq9cDEM2LCbNXLiGQFYlcpmC_wHmrtcDHidwoVpm4-fClE6Gaw/exec?angajat=${encodeURIComponent(angajat)}&tip=${encodeURIComponent(tip)}&ip=${ip}&locatie=${locatieIP}`;
 
               fetch(urlFallback)
                 .then(response => response.json())
