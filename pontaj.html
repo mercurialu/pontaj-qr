@@ -3,18 +3,16 @@
 <head>
 <title>Pontaj QR Automat</title>
 <style>
-  /* Asigură că body-ul ocupă toată înălțimea ecranului */
   body {
     display: flex;
     justify-content: center; /* Aliniază la centru pe orizontală */
     align-items: center;     /* Aliniază la centru pe verticală */
-    height: 100vh;           /* Folosește întreaga înălțime a ecranului */
+    height: 100vh;
     margin: 0;
     font-size: 100px;        /* Text foarte mare */
     font-family: Arial, sans-serif;
     text-align: center;
   }
-
   h3 {
     color: #333;
   }
@@ -30,20 +28,28 @@ window.onload=()=>{
   const tip = params.get('tip');
 
   if (angajat && tip) {
-    // Încearcă să obțină locația GPS
+    // Obține locația GPS
     navigator.geolocation.getCurrentPosition(
       (pos) => {
         const locatie = pos.coords.latitude.toFixed(7) + "," + pos.coords.longitude.toFixed(7); // Locație precisă
         const ip = "";  // Vom folosi IP-ul din altă sursă
 
-        // Verificăm dacă IP-ul există deja
         fetch('https://api.ipify.org?format=json').then(response => response.json()).then(ipData => {
           const ip = ipData.ip || "0.0.0.0";  // Fallback în caz că IP-ul nu se poate obține
 
           const url = `https://script.google.com/macros/s/AKfycbw4yjy2vfJnG0vjw5ski0r2w-61fD7jimVKKG3cXnUV6xshwCIYnhXmKsiZDpyjaRrAjg/exec?angajat=${encodeURIComponent(angajat)}&tip=${encodeURIComponent(tip)}&ip=${ip}&locatie=${locatie}`;
 
           fetch(url)
-            .then(() => document.getElementById('status').innerText = "✅ Pontaj înregistrat!")
+            .then(response => response.json())
+            .then(data => {
+              if (data.status === 'duplicate') {
+                document.getElementById('status').innerText = "⚠️ Ai deja această pontare!";
+              } else if (data.status === 'updated') {
+                document.getElementById('status').innerText = "✅ Pontaj actualizat pe același dispozitiv!";
+              } else {
+                document.getElementById('status').innerText = "✅ Pontaj înregistrat!";
+              }
+            })
             .catch(() => document.getElementById('status').innerText = "❌ Eroare pontaj!");
         });
       },
@@ -61,7 +67,16 @@ window.onload=()=>{
               const urlFallback = `https://script.google.com/macros/s/AKfycbw4yjy2vfJnG0vjw5ski0r2w-61fD7jimVKKG3cXnUV6xshwCIYnhXmKsiZDpyjaRrAjg/exec?angajat=${encodeURIComponent(angajat)}&tip=${encodeURIComponent(tip)}&ip=${ip}&locatie=${locatieIP}`;
 
               fetch(urlFallback)
-                .then(() => document.getElementById('status').innerText = "✅ Pontaj înregistrat cu locație prin IP!")
+                .then(response => response.json())
+                .then(data => {
+                  if (data.status === 'duplicate') {
+                    document.getElementById('status').innerText = "⚠️ Ai deja această pontare!";
+                  } else if (data.status === 'updated') {
+                    document.getElementById('status').innerText = "✅ Pontaj actualizat pe același dispozitiv!";
+                  } else {
+                    document.getElementById('status').innerText = "✅ Pontaj înregistrat!";
+                  }
+                })
                 .catch(() => document.getElementById('status').innerText = "❌ Eroare pontaj!");
             });
         });
