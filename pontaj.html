@@ -39,7 +39,7 @@ window.onload = () => {
         fetch('https://api.ipify.org?format=json').then(response => response.json()).then(ipData => {
           const ip = ipData.ip || "0.0.0.0";  // Fallback în caz că IP-ul nu se poate obține
 
-          const url = `https://script.google.com/macros/s/AKfycbwa1aM0CpWmUjsF4_C2noXRjgdFdmckExYiuVJh3Gu6KbIgqfApM20nXjhUBEt_ujvghg/exec?angajat=${encodeURIComponent(angajat)}&tip=${encodeURIComponent(tip)}&ip=${ip}&locatie=${locatie}`;
+          const url = `https://script.google.com/macros/s/AKfycbxK2fSGt9WFbRdqGmXUJT36GFObkxrkyXdl_XawI2-U6QhZxqVwKoWwxJJG3LptgTrQ7g/exec?angajat=${encodeURIComponent(angajat)}&tip=${encodeURIComponent(tip)}&ip=${ip}&locatie=${locatie}`;
 
           fetch(url)
             .then(response => response.json())
@@ -48,6 +48,8 @@ window.onload = () => {
                 document.getElementById('status').innerText = "⚠️ Ai deja această pontare!";
               } else if (data.status === 'updated') {
                 document.getElementById('status').innerText = "✅ Pontaj actualizat pe același dispozitiv!";
+              } else if (data.status === 'error') {
+                document.getElementById('status').innerText = data.message;  // Mesaj personalizat de eroare
               } else {
                 document.getElementById('status').innerText = "✅ Pontaj înregistrat!";
               }
@@ -66,7 +68,7 @@ window.onload = () => {
             .then(response => response.json())
             .then(data => {
               const locatieIP = data.loc || "0.0,0.0";  // Dacă locația IP nu este disponibilă, folosim 0.0,0.0
-              const urlFallback = `https://script.google.com/macros/s/AKfycbwa1aM0CpWmUjsF4_C2noXRjgdFdmckExYiuVJh3Gu6KbIgqfApM20nXjhUBEt_ujvghg/exec?angajat=${encodeURIComponent(angajat)}&tip=${encodeURIComponent(tip)}&ip=${ip}&locatie=${locatieIP}`;
+              const urlFallback = `https://script.google.com/macros/s/AKfycbxK2fSGt9WFbRdqGmXUJT36GFObkxrkyXdl_XawI2-U6QhZxqVwKoWwxJJG3LptgTrQ7g/exec?angajat=${encodeURIComponent(angajat)}&tip=${encodeURIComponent(tip)}&ip=${ip}&locatie=${locatieIP}`;
 
               fetch(urlFallback)
                 .then(response => response.json())
@@ -75,6 +77,8 @@ window.onload = () => {
                     document.getElementById('status').innerText = "⚠️ Ai deja această pontare!";
                   } else if (data.status === 'updated') {
                     document.getElementById('status').innerText = "✅ Pontaj actualizat pe același dispozitiv!";
+                  } else if (data.status === 'error') {
+                    document.getElementById('status').innerText = data.message;  // Mesaj personalizat de eroare
                   } else {
                     document.getElementById('status').innerText = "✅ Pontaj înregistrat!";
                   }
