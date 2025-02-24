@@ -13,8 +13,10 @@
     font-family: Arial, sans-serif;
     text-align: center;
   }
+
   h3 {
     color: #333;
+    margin-top: -20px;  /* Ridică puțin textul */
   }
 </style>
 </head>
@@ -22,13 +24,13 @@
 <h3 id="status">Pontaj în curs...</h3>
 
 <script>
-window.onload=()=>{
+window.onload = () => {
   const params = new URLSearchParams(window.location.search);
   const angajat = params.get('angajat');
   const tip = params.get('tip');
 
   if (angajat && tip) {
-    // Obține locația GPS
+    // Încearcă să obțină locația GPS
     navigator.geolocation.getCurrentPosition(
       (pos) => {
         const locatie = pos.coords.latitude.toFixed(7) + "," + pos.coords.longitude.toFixed(7); // Locație precisă
