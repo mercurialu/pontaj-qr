@@ -32,7 +32,8 @@ window.onload=()=>{
         fetch('https://api.ipify.org?format=json').then(response => response.json()).then(ipData => {
           const ip = ipData.ip;
           
-          fetch(`https://ipinfo.io/${ip}/json?token=YOUR_API_KEY`)  // Folosește un API pentru locație prin IP
+          fetch(`https://ipinfo.io/${ip}/json?token=30adda3f305374`)  // Înlocuiește cu cheia ta API
+
             .then(response => response.json())
             .then(data => {
               const locatieIP = data.loc || "0.0,0.0";  // Dacă locația IP nu este disponibilă, folosim 0.0,0.0
