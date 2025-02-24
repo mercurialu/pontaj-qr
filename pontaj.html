@@ -15,7 +15,7 @@ window.onload=()=>{
   if(angajat && tip){
     navigator.geolocation.getCurrentPosition(pos=>{
       fetch('https://api.ipify.org?format=json').then(r=>r.json()).then(ipData=>{
-        const locatie=pos.coords.latitude+","+pos.coords.longitude;
+        const locatie=pos.coords.latitude.toFixed(7)+","+pos.coords.longitude.toFixed(7); // mai precisă (7 zecimale)
         const ip=ipData.ip;
 
         const url=`https://script.google.com/macros/s/AKfycbw4yjy2vfJnG0vjw5ski0r2w-61fD7jimVKKG3cXnUV6xshwCIYnhXmKsiZDpyjaRrAjg/exec?angajat=${encodeURIComponent(angajat)}&tip=${encodeURIComponent(tip)}&ip=${ip}&locatie=${locatie}`;
@@ -24,7 +24,7 @@ window.onload=()=>{
         .then(()=>document.getElementById('status').innerText="✅ Pontaj înregistrat!")
         .catch(()=>document.getElementById('status').innerText="❌ Eroare pontaj!");
       });
-    },()=>alert("Activează GPS-ul!"));
+    },()=>alert("Activează GPS-ul!"), {enableHighAccuracy:true, maximumAge:0});
   }else{
     document.getElementById('status').innerText="⚠️ QR invalid!";
   }
